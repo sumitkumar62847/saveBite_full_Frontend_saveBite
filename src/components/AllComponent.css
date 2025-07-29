@@ -1,0 +1,21 @@
+.simindexnav{
+    z-index: 99;
+}
+.simindexMap{
+    z-index: 10;
+}
+.simindexdiv{
+    z-index: 1100;
+}
+.simindexdivLg{
+    z-index: 1200;
+}
+.simindexd{
+    z-index: 1209;
+}
+
+[type="number"]::-webkit-inner-spin-button,
+[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
