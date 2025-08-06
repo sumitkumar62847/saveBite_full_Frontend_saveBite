@@ -5,10 +5,10 @@ import { DeleteToCart } from '../Slices/cartSlice';
 function CartItemTime({iteminfo}) {
 
     const [dealSec, setDealSec] = useState(null);
-    const liveTime = new Date(iteminfo.LiveUntil);
     const dispatch = useDispatch();
 
         useEffect(() => {
+            const liveTime = new Date(iteminfo.LiveUntil);
             const abc = setInterval(() => {
                 const now = Date.now();
                 const diffMs = liveTime - now;
@@ -21,7 +21,7 @@ function CartItemTime({iteminfo}) {
                 }
             }, 1000);
             return () => clearInterval(abc);
-        }, [liveTime, iteminfo?._id,dispatch]);
+        }, [iteminfo?._id,dispatch,iteminfo.LiveUntil]);
   return (
     <p className='text-center text-red-600 bg-red-100 '>{`${Math.floor(dealSec/3600)?`0${Math.floor(dealSec/3600)}h :`: ''} ${Math.floor((dealSec % 3600)/60)}min : ${Math.floor(dealSec % 60)}sec`}</p>
   )
