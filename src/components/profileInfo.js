@@ -8,7 +8,6 @@ function ProfileInfo() {
     const userInfo = useSelector((state) => state.mainSB.userinfo);
     const inputRef = useRef(null);
     const dispatch = useDispatch();
-    console.log(userInfo)
     const [form, setForm] = useState({fullname:userInfo?.userInfo?.name ||'Guest765',email:userInfo?.userInfo?.email || 'example@gmail.com',gender:userInfo?.userInfo?.gender || ''});
     const [disable, setDisable] = useState(true);
     function editHandle(e){

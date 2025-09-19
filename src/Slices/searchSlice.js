@@ -4,6 +4,7 @@ import axios from "axios";
 const initialState = {
   navigatePath: "",
   searchData: null,
+  isLoader:false,
 };
 
 const Api = "http://localhost:8088";
@@ -37,9 +38,14 @@ const searchSlice = createSlice({
     },
   },
   extraReducers: (buider) => {
-    buider.addCase(getSearchitems.fulfilled, (state, action) => {
-      state.searchData = action.payload;
-    });
+    buider
+      .addCase(getSearchitems.pending, (state)=>{
+          state.isLoader = true;
+      })
+      .addCase(getSearchitems.fulfilled, (state, action) => {
+        state.isLoader = false;
+        state.searchData = action.payload;
+      });
   },
 });
 

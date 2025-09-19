@@ -18,7 +18,6 @@ function SearchItem({iteminfo,rest}){
   const liveuntiltime = new Date(iteminfo.LiveUntil);
   const images = iteminfo.imageUrl;
 
-  console.log(rest)
   useEffect(()=>{
     if(iteminfo?.inCart){
       setIsAdd(true);

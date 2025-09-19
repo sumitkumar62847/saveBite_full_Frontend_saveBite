@@ -5,6 +5,7 @@ import bagicon from '../images/shopping-bag.png'
 import helpicon from '../images/help.png'
 import proficon from '../images/profile-user.png'
 import searchicon from '../images/searchicon.png'
+import Aicon from '../images/AiIcon.gif'
 import './AllComponent.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { io } from 'socket.io-client';
@@ -18,13 +19,15 @@ function Header({search}){
     const [query, setQuery] = useState('');
     const socketRef = useRef(null)
     const typingTimeRef = useRef(null);
-    const Api = 'http://localhost:8088';
+
     const [suggestions,setsuggestions] = useState(new Set());
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const location = useLocation();
     const jwttoken = localStorage.getItem('jwt_token');
     const coods = localStorage.getItem('coods');
+
+    const Api = 'http://localhost:8088';
     
     useEffect(()=>{
         if(jwttoken && !isRegistered){
@@ -82,16 +85,16 @@ function Header({search}){
     function searchHandler(e){
         e.preventDefault();
         const suggest = Array.from(suggestions)[0];
-        if(suggest || query.length > 3){
+        if(suggest || query.length > 2){
             localStorage.setItem('querySearch',query);
             localStorage.setItem('querySuggest',suggest);
             setQuery("");
             setsuggestions(new Set());
             if (location.pathname === '/search') navigate(0);
             else navigate('/search');
-        }
-            
+        }   
     }
+
     function suggestionHandler(i,e){
         e.preventDefault();
         localStorage.setItem('querySearch',null);
@@ -101,10 +104,12 @@ function Header({search}){
         if (location.pathname === '/search') navigate(0);
         else navigate('/search');
     }
+
     function cardHandle(e){
         e.preventDefault();
         navigate('/cart')
     }
+
     useEffect(()=>{
         if(jwttoken && isRegistered){
             dispatch(getUser())
@@ -116,23 +121,25 @@ function Header({search}){
 
     const [isopen, setIsopen] = useState(false);
     useEffect(() => {
-    const timeoutId = setTimeout(() => {
-        if (!localStorage.getItem('pfystatus') && isRegistered && coods) {
-            document.body.style.overflow = 'hidden';
-            setIsopen(true);
-        } else{
-            document.body.style.overflow = '';
-        }
-    }, 2000);
+        const timeoutId = setTimeout(() => {
+            if (!localStorage.getItem('pfystatus') && isRegistered && coods) {
+                document.body.style.overflow = 'hidden';
+                setIsopen(true);
+            } else{
+                document.body.style.overflow = '';
+            }
+        }, 2000);
 
-    return () => clearTimeout(timeoutId);
-}, [isRegistered,coods]);
+        return () => clearTimeout(timeoutId);
+    }, [isRegistered,coods]);
+
     function closeHandle(e){
         e.preventDefault();
         setIsopen(false);
         document.body.style.overflow = '';
         localStorage.setItem('pfystatus',true);
     }
+
     function goClickHandle(e){
         e.preventDefault();
         setIsopen(false);
@@ -140,6 +147,7 @@ function Header({search}){
         localStorage.setItem('pfystatus',true);
         navigate('/profile');
     }
+
     return (
             <header className="w-full lg:h-[100px] md:h-[80px] h-[60px]">
                 <nav className="fixed top-0 w-full lg:h-[100px] md:h-[80px] h-[60px] simindexnav flex justify-between items-center pt-1 px-[1%] bg-white border-b border-[rgb(106,154,52)] pb-1">
@@ -151,8 +159,9 @@ function Header({search}){
                     </div>
                      {search && <div className='lg:w-[45%] md:w-[40%] flex items-center relative'>
                         <form className='w-full flex relative' onSubmit={searchHandler}>
-                            <input value={query} onChange={changeHandler} type="text" placeholder="Search foods, restaurent" className="hidden md:block border w-[100%] lg:h-[60px] md:h-[40px] pl-[10px] rounded-lg text-xl focus:outline-none focus:bg-slate-50"/>
-                            <button type='submit' className="flex justify-center items-center border-l lg:w-[80px] md:w-[60px] lg:h-[60px] md:h-[40px] text-xxl absolute rounded-lg right-0 cursor-pointer border  bg-white  hover:bg-[rgb(237,237,237)]">
+                            <img src={Aicon} alt='searchicon' className=' absolute left-0 lg:h-[50px] md:h-[40px] lg:w-[50px] md:w-[40px] border rounded-lg border-[rgb(76,136,166)] bg-white'/>
+                            <input value={query} onChange={changeHandler} type="text" placeholder="Search foods, restaurent, Anythings By Ai " className="hidden md:block border border-blue-900 w-[100%]  lg:h-[50px] md:h-[40px] pl-[60px] rounded-lg text-xl focus:outline-none focus:bg-slate-50"/>
+                            <button type='submit' className="flex justify-center items-center border-l border-blue-900 lg:w-[80px] md:w-[60px] lg:h-[50px] md:h-[40px] text-xxl absolute rounded-lg right-0 cursor-pointer border  bg-white  hover:bg-[rgb(237,237,237)]">
                                 <img src={searchicon} alt='searchicon' className='lg:w-[30px] md:w-[25px]'/>
                             </button>
                         </form>
