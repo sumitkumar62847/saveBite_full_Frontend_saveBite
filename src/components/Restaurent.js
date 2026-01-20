@@ -10,6 +10,7 @@ function Restaurent({restinfo,relative}){
   const dispatch = useDispatch();
   const rest = restinfo.rest;
   const items = restinfo.items;
+  console.log(items)
   function clickHandle(e){
     e.preventDefault();
     const result = rest?.Restaurant_name?.replace(/\s+/g, '');

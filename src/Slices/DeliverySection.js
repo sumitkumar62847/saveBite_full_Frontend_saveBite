@@ -2,17 +2,18 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const initialState = {
-    deliveryItems:[],
-    diningItems:[],
-    restAddresses:null,
+    ordersItems:[],
+    allOrderItems:[],
+    orderNumber:0
 }
-
-const Api = 'http://localhost:8088'
+// const Api = 'http://localhost:8088'
+const Api = 'https://savebite-full-version-server.onrender.com'
 
 export const setCurrentOrderItems = createAsyncThunk('delivery/setCurrentOrderItems',
     async (Data)=>{
         try {
             const jwt_token = localStorage.getItem("jwt_token");
+            console.log(Data)
             const response = await axios.post(`${Api}/CrtOrderitems`,{Data},{
                     headers: {
                         'Authorization': `Bearer ${jwt_token}`,
@@ -34,6 +35,7 @@ export const getCurrentOrderItems = createAsyncThunk('delivery/getCurrentOrderIt
                         userid:`${userid}`
                     }
                 })
+                console.log("hbxjbhvgcf",response.data);
             return response.data;
 
         } catch (error) {
@@ -42,15 +44,38 @@ export const getCurrentOrderItems = createAsyncThunk('delivery/getCurrentOrderIt
     }
 )
 
-export const restAddforDelivery = createAsyncThunk('delivery/restAddforDelivery',
-    async (data) => {
-        try{
-            const response = await axios.post(`${Api}/restaddresses`,{
-                    data
+
+
+export const getOrderItems = createAsyncThunk('delivery/getOrderItems',
+    async ()=>{
+        try {
+            const userid = localStorage.getItem("idtity");
+            const response = await axios.get(`${Api}/ordereditems`,{
+                    params:{
+                        userid:`${userid}`
+                    }
                 })
             return response.data;
-        }catch(err){
-            throw new Error(err.message);
+
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    }
+)
+
+export const getOrderNumber = createAsyncThunk('delivery/getOrderNumber',
+    async ()=>{
+        try {
+            const userid = localStorage.getItem("idtity");
+            const response = await axios.get(`${Api}/orderedNbr`,{
+                    params:{
+                        userid:`${userid}`
+                    }
+                })
+            return response.data;
+
+        } catch (error) {
+            throw new Error(error.message);
         }
     }
 )
@@ -65,12 +90,17 @@ const deliverySlice = createSlice({
                 console.log(action.payload);
             })
             .addCase(getCurrentOrderItems.fulfilled,(state,action)=>{
-                state.deliveryItems = action.payload.deliveryitems;
-                state.diningItems = action.payload.diningitems;
+                state.ordersItems = action.payload.ordersItems;
+               
             })
-            .addCase(restAddforDelivery.fulfilled,(state,action)=>{
-                state.restAddresses = { orderid: action.payload.orderid, restadd: action.payload.Addresses };
+            .addCase(getOrderItems.fulfilled,(state,action)=>{
+                state.allOrderItems = action.payload.allOrderItems;
+               
             })
+            .addCase(getOrderNumber.fulfilled,(state,action)=>{
+                state.orderNumber = action.payload.number;
+            })
+            
     }
 })
 

@@ -22,23 +22,56 @@ function AddressInfo() {
       dispatch(deleteUserAdd(id))
     }
   return (
-    <div className='w-[850px] h-auto  bg-green-100 m-4 border'>
-          {!isadd && <div className='w-full h-[80%] flex justify-center items-center'>
-            <h1 className='text-center text-2xl'>Not any Address has Added</h1>
-          </div>}
-          {isadd && <div className=' relative w-full h-[400px]  flex flex-col p-2'>
-            <h1 className='w-full text-center text-2xl pb-2 border-b'>Save Address</h1>
-            {addinfo?.AddData?.map((ele,index)=>(
-              <div key={index} className='border-b p-2'>
-                <button className=' absolute right-2 text-xs border px-1 rounded bg-red-300 hover:bg-red-400' onClick={(e)=>removeHandle(e,ele?._id)}>remove</button>
-                <h1>{ele?.Locality}</h1>
-                <h1>{ele?.Landmark}</h1>
-                <h1>{ele?.Map_Address}</h1>
-              </div>
-            )
-            )}
-          </div>} 
+    <div className="w-[50%] bg-white m-4 rounded-xl shadow-md border">
+  
+
+  {!isadd && (
+    <div className="flex flex-col items-center justify-center h-[420px] text-gray-600">
+      <h1 className="text-lg font-medium">
+        No address added yet
+      </h1>
+      <p className="text-sm text-gray-500 mt-1">
+        Please add a delivery address to continue
+      </p>
     </div>
+  )}
+
+
+  {isadd && (
+    <div className="relative w-full flex flex-col">
+      <div className="h-[60px] flex items-center justify-center border-b">
+        <h1 className="text-xl font-semibold text-gray-700">
+          Saved Addresses
+        </h1>
+      </div>
+      <div className="p-4 space-y-3 max-h-[340px] overflow-y-auto">
+        {addinfo?.AddData?.map((ele, index) => (
+          <div
+            key={index}
+            className="relative p-4 border rounded-lg bg-gray-50 hover:bg-gray-100 transition"
+          >
+            <button
+              className="absolute top-3 right-3 text-xs text-red-500 hover:text-red-700"
+              onClick={(e) => removeHandle(e, ele?._id)}
+            >
+              Remove
+            </button>
+
+            <p className="font-medium text-gray-800">
+              {ele?.Locality}
+            </p>
+            <p className="text-sm text-gray-500">
+              {ele?.Landmark}
+            </p>
+            <p className="text-sm text-gray-500">
+              {ele?.Map_Address}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  )}
+</div>
   )
 }
 

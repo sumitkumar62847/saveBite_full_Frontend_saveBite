@@ -16,10 +16,12 @@ function Searchdata(){
     const searchData = Data?.data;
     
     useEffect(()=>{
-        const querySearch = localStorage.getItem('querySearch');
-        const querySuggest = localStorage.getItem('querySuggest');
-        dispatch(getSearchitems({search:querySearch,suggested:querySuggest}))
-    },[dispatch]);
+        if(!searchData){
+            const querySearch = localStorage.getItem('querySearch');
+            const querySuggest = localStorage.getItem('querySuggest');
+            dispatch(getSearchitems({search:querySearch,suggested:querySuggest}))
+        }
+    },[dispatch,searchData]);
 
     return (
         <div className='w-full bg-slate-50 min-h-[100vh]'>

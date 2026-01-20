@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Header from './header';
 import { useDispatch, useSelector } from 'react-redux';
 import MapComponent from './MapComponent';
-import { deleteUserAdd, getAddressData, setCurrentAdd } from '../Slices/Addressinfo';
+import { deleteUserAdd, getAddressData, setCurrentAdd, setCurrentAddAtF } from '../Slices/Addressinfo';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -21,10 +21,12 @@ function AddressField() {
       }
     },[dispatch,addinfo?.AddData?.length,setIsadd])
 
-    function clickHandle(e,id,userid){
+    function clickHandle(e,id,userid, ele){
       e.preventDefault();
-      dispatch(setCurrentAdd({id,userid}))
-      dispatch(getAddressData());
+      console.log(ele,"/n", ele?.isUseNow);
+      dispatch(setCurrentAddAtF(id));
+      dispatch(setCurrentAdd({id,userid}));
+      // dispatch(getAddressData());
     }
     
     function removeHandle(e,id){
@@ -37,26 +39,69 @@ function AddressField() {
     <div className="w-full h-[100vh]  bg-[#ffffff] simindexMap">
         <Header islogin={!isRegistered}></Header>
         {isadd &&<div className='w-full h-[87vh] bg-white flex flex-col gap-4 items-center justify-center'>
-            <div className=' w-[50%] min-h-[50vh] bg-green-100 rounded-lg'>
-                <div className='w-full h-[60px] border-b flex items-center relative'>
-                  <h1 className='w-full text-center text-2xl'>Save Address</h1>
-                  <button className='absolute right-2 text-2xl w-10 h-10 border rounded-full ' onClick={()=> navigate(-1)}>X</button>
-                </div>
-                <div className='w-full h-auto  flex flex-col'>
-                  {addinfo?.AddData?.map((ele,index)=>(
-                    <div key={index} className={`relative flex  border-b p-2 cursor-pointer ${ele?.isUseNow ? ' border border-green-400' :''} hover:bg-green-200 `} onClick={(e)=>clickHandle(e,ele._id,ele.userid)}>
-                      <button className=' absolute right-2 text-xs border px-1 rounded bg-red-300 hover:bg-red-400' onClick={(e)=>removeHandle(e,ele?._id)}>remove</button>
-                      <input type='radio' checked={ele?.isUseNow} className='mr-2'></input>
-                      <div>
-                        <h1>{ele?.Locality}</h1>
-                        <h1>{ele?.Landmark}</h1>
-                        <h1>{ele?.Map_Address}</h1>
-                      </div>
+            <div className="w-[50%] min-h-[60vh] bg-white rounded-xl shadow-lg">
+
+              <div className="w-full h-[64px] border-b flex items-center justify-center relative">
+                <h1 className="text-xl font-semibold text-gray-700">
+                  Save Address
+                </h1>
+                <button
+                  className="absolute right-4 text-gray-500 hover:text-red-500 text-lg"
+                  onClick={() => navigate(-1)}
+                >
+                  ✕
+                </button>
+              </div>
+
+
+              <div className="p-4 space-y-3">
+                {addinfo?.AddData?.map((ele, index) => (
+                  <div
+                    key={index}
+                    onClick={(e) => clickHandle(e, ele._id, ele.userid, ele)}
+                    className={`relative flex items-start gap-3 p-4 rounded-lg border cursor-pointer transition
+                      ${
+                        ele?.isUseNow
+                          ? "border-green-500 bg-green-50"
+                          : "border-gray-200 hover:bg-gray-50"
+                      }
+                    `}
+                  >
+
+                    <input
+                      type="radio"
+                      checked={ele?.isUseNow}
+                      readOnly
+                      className="mt-1 accent-green-500"
+                    />
+
+
+                    <div className="text-sm text-gray-700 leading-5">
+                      <p className="font-medium">{ele?.Locality}</p>
+                      <p className="text-gray-500">{ele?.Landmark}</p>
+                      <p className="text-gray-500">{ele?.Map_Address}</p>
                     </div>
-                  )
-                  )}
-                  <div className='w-full flex items-center justify-center my-4 '><button className=' bg-green-400 rounded-lg w-[120px] h-[40px] text-xs' onClick={()=> setIsadd(false)}>Add New Address</button></div>
+
+
+                    <button
+                      onClick={(e) => removeHandle(e, ele?._id)}
+                      className="absolute top-3 right-3 text-xs text-red-500 hover:text-red-700"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))}
+
+
+                <div className="pt-4 flex justify-center">
+                  <button
+                    className="px-6 py-2 text-sm bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+                    onClick={() => setIsadd(false)}
+                  >
+                    + Add New Address
+                  </button>
                 </div>
+              </div>
             </div>
             <button className='p-2 bg-green-500 rounded-lg w-[300px]' onClick={()=> navigate('/payment')}>Continue</button>
         </div>}

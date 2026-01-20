@@ -34,7 +34,7 @@ function CartTotalAmount({cartItems ,payment}){
   const handlePayment = async (amount) =>{
     try {
         const jwt_token = localStorage.getItem("jwt_token");
-        const { data } = await axios.post("http://localhost:8088/api/create-order",{amount},{
+        const { data } = await axios.post("https://savebite-full-version-server.onrender.com/api/create-order",{amount},{
             headers: {
                 'Authorization': `Bearer ${jwt_token}`,
                 'Content-Type': 'application/json',
@@ -48,17 +48,17 @@ function CartTotalAmount({cartItems ,payment}){
         description: "Payment for your order",
         order_id: data.orderId,   
         handler: async function (response){
-          const verifyRes = await axios.post("http://localhost:8088/api/verify", response,{
+          const verifyRes = await axios.post("https://savebite-full-version-server.onrender.com/api/verify", response,{
             headers: {
                 'Authorization': `Bearer ${jwt_token}`,
                 'Content-Type': 'application/json',
             }
           });
-          if (verifyRes.data.success) {
+          if (verifyRes.data.success){
             // alert("Payment successful and verified!");
             dispatch(setCurrentOrderItems({RestItemAmt,HomeItemAmt}))
             dispatch(DeleteToCart('All_Clear'));
-            window.location.href = '/';
+            navigate('/');
             return {payment:'Done'};
           } else {
             alert("Payment verification failed.");
@@ -109,14 +109,65 @@ function CartTotalAmount({cartItems ,payment}){
             {!payment && <button className='w-full h-[50px] mt-4 bg-green-500 active:bg-green-600 text-black rounded-lg text-[6px] md:text-[14px] text-center border' onClick={checkoutHandle}>Proceed to Checkout</button>}
             {payment && <button className='w-full h-[50px] mt-4 bg-green-500 active:bg-green-600 text-black rounded-lg text-[6px] md:text-[14px] text-center border text-2xl' onClick={payHandle}>Pay {(totalHomeAmt + totalRestAmt + dlyCrg).toFixed(1)}&#8377;</button>}
         </div>
-        }{cartItems.length === 0 && !payment && <div className='w-full h-[50vh] flex flex-col justify-center items-center'>
-          <h1>Cart Empty</h1>
-          <i>Click <span className='text-blue-500 underline cursor-pointer' onClick={()=>{navigate('/')}}> Here</span> For Order</i>
-        </div>}
-        {cartItems.length === 0 && payment && <div className='w-full h-[50vh] flex flex-col justify-center items-center'>
-          <h1 className='text-xl text-red-400'>Your Perform address/payment Page Refresh</h1>
-          <i>Click <span className='text-blue-500 underline cursor-pointer border' onClick={()=>{navigate('/cart')}}> Here</span> and move to Bag</i>
-        </div>}
+        }{cartItems.length === 0 && !payment && 
+          <div className="flex min-h-[70vh] items-center justify-center bg-gray-50 px-4">
+            <div className="w-full max-w-md rounded-2xl bg-white p-8 text-center shadow-lg">
+              
+              
+              <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-green-100">
+                <span className="text-4xl">🛒</span>
+              </div>
+
+              
+              <h2 className="mb-2 text-2xl font-semibold text-gray-800">
+                Your cart is empty
+              </h2>
+
+              <p className="mb-6 text-gray-500">
+                Looks like you haven’t added anything yet.
+              </p>
+
+              <button
+                onClick={() => navigate("/")}
+                className="w-full rounded-xl bg-green-500 py-3 font-semibold text-white transition hover:bg-green-600"
+              >
+                Browse Food 🍽️
+              </button>
+            </div>
+          </div>}
+
+
+
+        {cartItems.length === 0 && payment && 
+        <div className="flex min-h-[70vh] items-center justify-center bg-gray-50 px-4">
+          <div className="w-full max-w-md rounded-2xl bg-white p-8 text-center shadow-lg">
+            
+            
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
+              <span className="text-3xl">⚠️</span>
+            </div>
+
+            
+            <h1 className="mb-2 text-xl font-semibold text-gray-800">
+              Session refreshed
+            </h1>
+
+            
+            <p className="mb-6 text-gray-500">
+              Your address or payment session was refreshed.
+              Please go back to your bag and try again.
+            </p>
+
+            
+            <button
+              onClick={() => navigate("/cart")}
+              className="w-full rounded-xl bg-green-500 py-3 font-semibold text-white transition hover:bg-green-600"
+            >
+              Go to Bag 
+            </button>
+          </div>
+        </div>
+        }
     </>
     
   )

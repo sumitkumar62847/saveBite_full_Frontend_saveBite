@@ -7,7 +7,8 @@ const initialState = {
   isLoader:false,
 };
 
-const Api = "http://localhost:8088";
+const Api = "https://savebite-full-version-server.onrender.com";
+// const Api = 'http://localhost:8088'
 
 export const getSearchitems = createAsyncThunk(
   "search/getSitems",
@@ -45,6 +46,7 @@ const searchSlice = createSlice({
       .addCase(getSearchitems.fulfilled, (state, action) => {
         state.isLoader = false;
         state.searchData = action.payload;
+        console.log(action.payload);
       });
   },
 });

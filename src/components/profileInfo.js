@@ -34,7 +34,7 @@ function ProfileInfo() {
         setForm({...form,[e.target.name]:e.target.value})
     }
   return(
-    <div className='w-[850px]  bg-green-100 m-4 border'>
+    <div className='w-[50%]  bg-white m-4 rounded-xl shadow-md border'>
         <div className='lg:w-[75%] md:w-[80%] sm:w-[90%] h-auto mt-10 mx-auto my-4'>
             <form name='personalInfo' className='w-full my-5'>
                 <label className='text-slate-950 text-2xl'>Personal Information</label>

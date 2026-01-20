@@ -1,6 +1,6 @@
 import React, { useEffect, useState} from 'react'
 
-function DealTime({liveTime,SetitemShow}) {
+function DealTime({liveTime,SetitemShow}){
     const [dealSec, setDealSec] = useState(null);
         useEffect(()=>{
             const abc  = setInterval(() =>{

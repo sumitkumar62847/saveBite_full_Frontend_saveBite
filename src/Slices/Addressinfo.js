@@ -8,7 +8,7 @@ const newadd = {
 }
 
 
-const Api = 'http://localhost:8088';
+const Api = 'https://savebite-full-version-server.onrender.com';
 
 
 export const getAddressData = createAsyncThunk('restAdd/getAddressData',
@@ -76,7 +76,21 @@ export const setCurrentAdd = createAsyncThunk('restAdd/setCurrentAdd',
 const restRegister = createSlice({
     name:'restAdd',
     initialState: newadd,
-    reducers: {},
+    reducers: {
+        setCurrentAddAtF: (state, action) => {
+            console.log('cdscvdsc');
+            state.restAdd?.AddData?.forEach((ele) => {
+                if (ele._id !== action.payload) {
+                    ele.isUseNow = false;
+                }
+                if (ele._id === action.payload) {
+                    ele.isUseNow = true;
+                }
+                console.log(ele._id, action.payload);
+            });
+            
+        }
+    },
     extraReducers: (builder)=>{
         builder
             .addCase(getAddressData.fulfilled,(state, action)=>{
@@ -90,6 +104,8 @@ const restRegister = createSlice({
             })
     }
 });
+
+export const {setCurrentAddAtF} = restRegister.actions;
 
 export default restRegister.reducer;
 

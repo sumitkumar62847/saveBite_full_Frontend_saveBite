@@ -147,7 +147,7 @@ const MapComponent = ({responsiveness}) => {
   }
   return (
     <>{responsiveness&&
-      <div className=" border w-[40%] h-auto simindexdiv m-4 rounded-lg">
+      <div className=" border w-[50%] h-auto simindexdiv m-2 rounded-lg">
         <input className="w-[100%] h-[40px] px-4 focus:outline-none rounded-lg"  type="text" placeholder="Search for a location..." value={searchQuery} onChange={handleSearchChange}
           onKeyDown={(e)=>e.key === 'Enter' && handleSelectLocation(searchResults[0])} />
         {searchResults.length > 0 && (
@@ -162,7 +162,7 @@ const MapComponent = ({responsiveness}) => {
         )}
       </div>}
       <div className="w-full flex  justify-center gap-4">
-          <div className={`relative w-[${!responsiveness?'40%':'30%'}] border bg-white  shadow-xl  border-gray-400 rounded-2xl overflow-hidden`}>
+          <div className={`relative w-[${!responsiveness?'50%':'40%'}]  bg-white  shadow-2xl  border-gray-400 rounded-2xl overflow-hidden`}>
             {!responsiveness&&<h1 className="h-[10%] text-center p-2 text-[30px] border-b-2 ">Address Information</h1>}  
             {!responsiveness&&
             <div className="absolute top-[11%] left-[15%] simindexdiv w-[70%]">
@@ -184,7 +184,7 @@ const MapComponent = ({responsiveness}) => {
                 <button className="w-[60%] h-[40px] text-center text-white py-2 bg-green-600 hover:bg-green-800 rounded-lg" onClick={continueHandle}>Continue</button>
             </div>}
             <div className={`w-[50px] h-[50px] rounded-full absolute ${responsiveness ? 'bottom-3' : 'bottom-[170px]'} right-3  bg-white border simindexdiv` }><button><img width='50px' src={currentLocationicon} alt="getLocation" onClick={getCoods}/></button></div>
-            <div className="w-full h-[60vh]">
+            <div className="w-full h-[60vh] border">
               <MapContainer center={position} zoom={zoom} zoomSnap={0.5} minZoom={3} className="w-full h-full">
                 <SetMapView position={position} zoom={zoom}/>
                 <TileLayer
@@ -231,6 +231,11 @@ const MapComponent = ({responsiveness}) => {
       </div>
     </>
   );
+
+
+
+
+  
 };
 
 export default MapComponent;

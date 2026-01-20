@@ -7,7 +7,7 @@ const NewUser = {
     isRegistered: false,
 }
 
-const Api = 'http://localhost:8088'
+const Api = 'https://savebite-full-version-server.onrender.com'
 
 export const getUser = createAsyncThunk('mainSB/getUser',
     async ()=>{
@@ -68,7 +68,7 @@ export const otpVerification = createAsyncThunk('mainSB/otpVerification',
     async (otpData) => {
         try {
             const response = await axios.post(`${Api}/otpverify`, otpData);
-            console.log(response.data);
+            // console.log(response.data);
             return response.data;
         } catch (error) {
             throw new Error(error.message);
