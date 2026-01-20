@@ -6,8 +6,10 @@ const initialState = {
     allOrderItems:[],
     orderNumber:0
 }
-// const Api = 'http://localhost:8088'
-const Api = 'https://savebite-full-version-server.onrender.com'
+
+
+const Api = process.env.REACT_APP_API_URL;
+
 
 export const setCurrentOrderItems = createAsyncThunk('delivery/setCurrentOrderItems',
     async (Data)=>{

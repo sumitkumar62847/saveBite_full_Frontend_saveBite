@@ -7,8 +7,9 @@ const Iteminfo = {
     itemPath:''
 }
 
-const Api = 'https://savebite-full-version-server.onrender.com'
-// const Api = 'http://localhost:8088'
+const Api = process.env.REACT_APP_API_URL;
+
+
 
 export const getitems = createAsyncThunk('items/getitems',
     async () => {

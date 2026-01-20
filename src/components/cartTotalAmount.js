@@ -12,6 +12,8 @@ function CartTotalAmount({cartItems ,payment}){
   const dlyCrg = useSelector((state)=> state.cart.dlyCrg);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const Api = process.env.REACT_APP_API_URL;
+
   let totalHomeAmt = 0;
   let totalRestAmt = 0;
   HomeItemAmt.forEach(item => {
@@ -34,7 +36,7 @@ function CartTotalAmount({cartItems ,payment}){
   const handlePayment = async (amount) =>{
     try {
         const jwt_token = localStorage.getItem("jwt_token");
-        const { data } = await axios.post("https://savebite-full-version-server.onrender.com/api/create-order",{amount},{
+        const { data } = await axios.post(`${Api}/api/create-order`,{amount},{
             headers: {
                 'Authorization': `Bearer ${jwt_token}`,
                 'Content-Type': 'application/json',
@@ -48,7 +50,7 @@ function CartTotalAmount({cartItems ,payment}){
         description: "Payment for your order",
         order_id: data.orderId,   
         handler: async function (response){
-          const verifyRes = await axios.post("https://savebite-full-version-server.onrender.com/api/verify", response,{
+          const verifyRes = await axios.post(`${Api}/api/verify`, response,{
             headers: {
                 'Authorization': `Bearer ${jwt_token}`,
                 'Content-Type': 'application/json',

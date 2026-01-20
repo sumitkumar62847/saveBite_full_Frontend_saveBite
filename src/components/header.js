@@ -29,7 +29,7 @@ function Header({ search }) {
   const jwttoken = localStorage.getItem("jwt_token");
   const coods = localStorage.getItem("coods");
 
-  const Api = "https://savebite-full-version-server.onrender.com";
+  const Api = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
     if (jwttoken && !isRegistered) dispatch(mainLogin(jwttoken));

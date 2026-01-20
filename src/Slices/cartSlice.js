@@ -9,7 +9,8 @@ const initialState = {
 }
 
 
-const Api = 'https://savebite-full-version-server.onrender.com'
+const Api = process.env.REACT_APP_API_URL;
+
 
 export const getCartItems = createAsyncThunk('cart/getCartItems',
     async () => {
