@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import DealTime from './DealTime.js';
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, EffectCards } from "swiper/modules";
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart} from '../Slices/cartSlice.js';
 import { useNavigate } from 'react-router-dom';
 import { setitemPath } from '../Slices/items.js';
+
+
+
  
 
 function Item({iteminfo,rest}){
@@ -55,20 +56,14 @@ function Item({iteminfo,rest}){
   return(
     <>
       {itemShow && iteminfo.quantity > 0 && <div className='w-[100%] md:w-[90%] aspect-[3/4] bg-white rounded-xl shadow-md mx-auto'>
-            <Swiper
-              className='w-[100%] h-[60%]'
-                modules={[Autoplay, EffectCards]}
-                // loop={true}
-                autoplay={{ delay: 3000, disableOnInteraction:false}}
-                speed={100}
-                slidesPerView={1}
-            >
-              {images.map((image, index) =>(
-                <SwiperSlide key={index}>
-                    <img src={image} alt='item-img' className='w-full h-full object-cover rounded-t-xl border-b cursor-pointer'onClick={handleClick}></img>
-                </SwiperSlide>
-              ))}
-            </Swiper>
+            
+            
+            
+            
+                
+                    <img src={images[0]} alt='item-img' className='w-full h-full object-cover rounded-t-xl border-b cursor-pointer'onClick={handleClick}></img>
+           
+            
               <DealTime liveTime={liveuntiltime} SetitemShow={setitemShow}></DealTime>
               <h2 className=' text-center text-[15px] text-xl'>{iteminfo.item_name}</h2>
               <p className='text-center'>Price:<label className='line-through  '>{iteminfo.price}&#8377; </label><strong>{Number(iteminfo.price - ((iteminfo.price)*(iteminfo.discount)/100)).toFixed(2)}&#8377; </strong>  (off {iteminfo.discount}%)</p>

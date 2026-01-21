@@ -17,7 +17,7 @@ function Header({ search }) {
 
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState(new Set());
-//   const [isopen, setIsopen] = useState(false);
+  const [hoverScale, setHoverScale] = useState(null); // Track hover for animations
 
   const socketRef = useRef(null);
   const typingTimeRef = useRef(null);
@@ -28,7 +28,6 @@ function Header({ search }) {
 
   const jwttoken = localStorage.getItem("jwt_token");
   const coods = localStorage.getItem("coods");
-
   const Api = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
@@ -60,9 +59,7 @@ function Header({ search }) {
       socketRef.current.on("suggestions", (data) => {
         const set = new Set();
         data?.items?.forEach((i) => set.add(i.item_name));
-        data?.restaurants?.forEach((r) =>
-          set.add(r.Restaurant_name)
-        );
+        data?.restaurants?.forEach((r) => set.add(r.Restaurant_name));
         setSuggestions(set);
       });
     }
@@ -79,16 +76,12 @@ function Header({ search }) {
   function searchHandler(e) {
     e.preventDefault();
     const first = Array.from(suggestions)[0];
-
     if (first || query.length > 2) {
       localStorage.setItem("querySearch", query);
       localStorage.setItem("querySuggest", first);
       setQuery("");
       setSuggestions(new Set());
-
-      location.pathname === "/search"
-        ? navigate(0)
-        : navigate("/search");
+      location.pathname === "/search" ? navigate(0) : navigate("/search");
     }
   }
 
@@ -99,67 +92,93 @@ function Header({ search }) {
     navigate("/search");
   }
 
-  function cardHandle() {
-    navigate("/cart");
-  }
+  const btnStyle = {
+    padding: "8px 24px",
+    borderRadius: "12px",
+    backgroundImage: "linear-gradient(to right, #4ade80, #16a34a)",
+    color: "white",
+    fontWeight: "600",
+    border: "none",
+    cursor: "pointer",
+    boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+    transition: "transform 0.2s",
+  };
 
   return (
-    <header className="w-full h-[90px]">
+    <header style={{ width: "100%", height: "90px" }}>
       <nav
-        className="
-        fixed top-0 z-50 w-full h-[90px]
-        bg-white/80 backdrop-blur-xl
-        shadow-lg border-b border-green-200
-        flex items-center justify-between px-[3%]
-      "
+        style={{
+          position: "fixed",
+          top: 0,
+          zIndex: 50,
+          width: "100%",
+          height: "90px",
+          backgroundColor: "rgba(255, 255, 255, 0.8)",
+          backdropFilter: "blur(24px)",
+          boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
+          borderBottom: "1px solid #bbf7d0",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          paddingLeft: "3%",
+          paddingRight: "3%",
+        }}
       >
         <div
-          className="flex items-center gap-3 cursor-pointer"
+          style={{ display: "flex", alignItems: "center", gap: "12px", cursor: "pointer" }}
           onClick={() => navigate("/")}
+          onMouseEnter={() => setHoverScale("logo")}
+          onMouseLeave={() => setHoverScale(null)}
         >
           <img
             src={logo}
             alt="logo"
-            className="w-[60px] hover:scale-105 transition"
+            style={{
+              width: "60px",
+              transition: "transform 0.2s",
+              transform: hoverScale === "logo" ? "scale(1.05)" : "scale(1)",
+            }}
           />
           <div>
-            <p className="text-3xl font-extrabold text-green-500">
-              SAVE<span className="text-orange-400">BITE</span>
+            <p style={{ fontSize: "1.875rem", lineHeight: "2.25rem", fontWeight: 800, color: "#22c55e", margin: 0 }}>
+              SAVE<span style={{ color: "#fb923c" }}>BITE</span>
             </p>
-            <p className="text-xs text-gray-500">
-              Smart AI Food Search
-            </p>
+            <p style={{ fontSize: "0.75rem", color: "#6b7280", margin: 0 }}>Smart AI Food Search</p>
           </div>
         </div>
 
         {search && (
-          <div className="relative w-[45%] hidden md:block">
+          <div style={{ position: "relative", width: "45%" }}>
             <form onSubmit={searchHandler}>
               <div
-                className="
-                flex items-center bg-white
-                rounded-2xl border shadow-md
-                focus-within:ring-2 ring-green-400
-              "
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  backgroundColor: "white",
+                  borderRadius: "1rem",
+                  border: "1px solid #e5e7eb",
+                  boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+                }}
               >
-                <img
-                  src={Aicon}
-                  alt="ai"
-                  className="w-10 h-10 ml-2 rounded-full"
-                />
+                <img src={Aicon} alt="ai" style={{ width: "40px", height: "40px", marginLeft: "8px", borderRadius: "9999px" }} />
                 <input
                   value={query}
                   onChange={changeHandler}
                   placeholder="Ask AI: high protein, fever dinner..."
-                  className="w-full px-4 py-3 text-lg outline-none bg-transparent"
+                  style={{
+                    width: "100%",
+                    padding: "12px 16px",
+                    fontSize: "1.125rem",
+                    outline: "none",
+                    backgroundColor: "transparent",
+                    border: "none",
+                  }}
                 />
                 <button
                   type="submit"
-                  className="
-                  mx-2 px-4 py-2 rounded-xl
-                  bg-gradient-to-r from-green-400 to-green-600
-                  text-white font-semibold hover:scale-105 transition
-                "
+                  style={{ ...btnStyle, margin: "0 8px", transform: hoverScale === "search" ? "scale(1.05)" : "scale(1)" }}
+                  onMouseEnter={() => setHoverScale("search")}
+                  onMouseLeave={() => setHoverScale(null)}
                 >
                   🔍
                 </button>
@@ -167,12 +186,30 @@ function Header({ search }) {
             </form>
 
             {suggestions.size > 0 && (
-              <div className="absolute mt-3 w-full bg-white rounded-xl shadow-xl overflow-hidden">
+              <div
+                style={{
+                  position: "absolute",
+                  marginTop: "12px",
+                  width: "100%",
+                  backgroundColor: "white",
+                  borderRadius: "0.75rem",
+                  boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1)",
+                  overflow: "hidden",
+                }}
+              >
                 {Array.from(suggestions).map((i, idx) => (
                   <div
                     key={idx}
                     onClick={() => suggestionHandler(i)}
-                    className="px-5 py-4 hover:bg-green-50 cursor-pointer flex gap-3"
+                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f0fdf4")}
+                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+                    style={{
+                      padding: "16px 20px",
+                      cursor: "pointer",
+                      display: "flex",
+                      gap: "12px",
+                      transition: "background-color 0.2s",
+                    }}
                   >
                     🤖 <span>{i}</span>
                   </div>
@@ -182,16 +219,13 @@ function Header({ search }) {
           </div>
         )}
 
-        <div className="flex items-center gap-4">
+        <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
           {!isRegistered && (
             <button
               onClick={() => navigate("/login")}
-              className="
-              px-6 py-2 rounded-xl
-              bg-gradient-to-r from-green-400 to-green-600
-              text-white font-semibold shadow-md
-              hover:scale-105 transition
-            "
+              style={{ ...btnStyle, transform: hoverScale === "login" ? "scale(1.05)" : "scale(1)" }}
+              onMouseEnter={() => setHoverScale("login")}
+              onMouseLeave={() => setHoverScale(null)}
             >
               Login
             </button>
@@ -200,29 +234,41 @@ function Header({ search }) {
           {isRegistered && (
             <div
               onClick={() => navigate("/profile")}
-              className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-green-50 cursor-pointer"
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f0fdf4")}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "8px 12px",
+                borderRadius: "0.75rem",
+                cursor: "pointer",
+                transition: "background-color 0.2s",
+              }}
             >
-              <img alt="icon" src={proficon} className="w-6" />
-              <span className="font-medium">
-                {userInfo?.userInfo?.name || "Guest"}
-              </span>
+              <img alt="icon" src={proficon} style={{ width: "24px" }} />
+              <span style={{ fontWeight: 500 }}>{userInfo?.userInfo?.name || "Guest"}</span>
             </div>
           )}
 
           {isRegistered && (
             <div
-              onClick={cardHandle}
-              className="p-2 rounded-full hover:bg-green-50 cursor-pointer"
+              onClick={() => navigate("/cart")}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f0fdf4")}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+              style={{ padding: "8px", borderRadius: "9999px", cursor: "pointer", transition: "background-color 0.2s" }}
             >
-              <img alt="icon" src={bagicon} className="w-7" />
+              <img alt="icon" src={bagicon} style={{ width: "28px" }} />
             </div>
           )}
 
           <div
             onClick={() => navigate("/help")}
-            className="p-2 rounded-full hover:bg-green-50 cursor-pointer"
+            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f0fdf4")}
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+            style={{ padding: "8px", borderRadius: "9999px", cursor: "pointer", transition: "background-color 0.2s" }}
           >
-            <img alt="icon" src={helpicon} className="w-7" />
+            <img alt="icon" src={helpicon} style={{ width: "28px" }} />
           </div>
         </div>
       </nav>

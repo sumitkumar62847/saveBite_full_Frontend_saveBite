@@ -2,8 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getCurrentOrderItems } from '../Slices/DeliverySection';
 import { useEffect, useState } from 'react';
 
-
-function OrderCart({allOrder, AllOrderItems, setOnumber}) {
+function OrderCart({ allOrder, AllOrderItems, setOnumber }) {
   const dispatch = useDispatch();
   const OItems = useSelector((state) => state.delivery.ordersItems);
   const OrderItems = allOrder ? AllOrderItems : OItems;
@@ -11,76 +10,164 @@ function OrderCart({allOrder, AllOrderItems, setOnumber}) {
   useEffect(() => {
     dispatch(getCurrentOrderItems());
   }, [dispatch]);
-  console.log(OItems)
 
   return (
-    <div className="w-full h-[100%] overflow-y-auto p-4 space-y-4 bg-gray-50">
-      {OrderItems.length !== 0 ? OrderItems.map((item) => (
-        <OrderItem key={item.orderid} item={item} />
-      )) : <div className='w-full h-full flex justify-center items-center'>
-            
-        </div>}
+    <div
+      style={{
+        width: '100%',
+        height: '100%',
+        overflowY: 'auto',
+        padding: '1rem',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '1rem',
+        backgroundColor: '#f9fafb', // bg-gray-50
+      }}
+    >
+      {OrderItems.length !== 0 ? (
+        OrderItems.map((item) => <OrderItem key={item.orderid} item={item} />)
+      ) : (
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        ></div>
+      )}
     </div>
   );
 }
 
-
 export default OrderCart;
-
 
 function OrderItem({ item }) {
   const [isDining, setIsDining] = useState(false);
 
   return (
-    <div className="bg-white rounded-2xl shadow-md p-4 space-y-3 border border-green-100">
-
-      <div className="flex justify-between items-center">
+    <div
+      style={{
+        backgroundColor: 'white',
+        borderRadius: '1rem', // rounded-2xl
+        boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)', // shadow-md
+        padding: '1rem',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '0.75rem', // space-y-3
+        border: '1px solid #dcfce7', // border-green-100
+      }}
+    >
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
         <div>
-          <p className="text-sm text-gray-500">Order ID</p>
-          <p className="text-sm font-semibold truncate w-[150px]">
+          <p style={{ fontSize: '0.875rem', color: '#6b7280' }}>Order ID</p>
+          <p
+            style={{
+              fontSize: '0.875rem',
+              fontWeight: 600,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              width: '150px',
+            }}
+          >
             {item.orderid}
           </p>
         </div>
 
-        <span className="px-3 py-1 text-[13px] rounded-full bg-green-100 text-green-700">
+        <span
+          style={{
+            paddingLeft: '0.75rem',
+            paddingRight: '0.75rem',
+            paddingTop: '0.25rem',
+            paddingBottom: '0.25rem',
+            fontSize: '13px',
+            borderRadius: '9999px',
+            backgroundColor: '#dcfce7', // bg-green-100
+            color: '#15803d', // text-green-700
+          }}
+        >
           {item.orderStatus}
         </span>
       </div>
 
-      <div className="flex bg-gray-100 rounded-full p-1 text-sm font-medium">
+      <div
+        style={{
+          display: 'flex',
+          backgroundColor: '#f3f4f6', // bg-gray-100
+          borderRadius: '9999px',
+          padding: '0.25rem',
+          fontSize: '0.875rem',
+          fontWeight: 500,
+        }}
+      >
         <button
           onClick={() => setIsDining(false)}
-          className={`w-1/2 py-1 rounded-full transition-all ${
-            !isDining ? 'bg-green-600 text-white' : 'text-gray-600'
-          }`}
+          style={{
+            width: '50%',
+            paddingTop: '0.25rem',
+            paddingBottom: '0.25rem',
+            borderRadius: '9999px',
+            transition: 'all 0.2s',
+            border: 'none',
+            cursor: 'pointer',
+            backgroundColor: !isDining ? '#16a34a' : 'transparent', // bg-green-600
+            color: !isDining ? 'white' : '#4b5563', // text-gray-600
+          }}
         >
           🚚 Delivery
         </button>
         <button
           onClick={() => setIsDining(true)}
-          className={`w-1/2 py-1 rounded-full transition-all ${
-            isDining ? 'bg-orange-500 text-white' : 'text-gray-600'
-          }`}
+          style={{
+            width: '50%',
+            paddingTop: '0.25rem',
+            paddingBottom: '0.25rem',
+            borderRadius: '9999px',
+            transition: 'all 0.2s',
+            border: 'none',
+            cursor: 'pointer',
+            backgroundColor: isDining ? '#f97316' : 'transparent', // bg-orange-500
+            color: isDining ? 'white' : '#4b5563',
+          }}
         >
           🍽 Dining
         </button>
       </div>
-      <div className="space-y-2">
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
         {!isDining &&
           (item?.Deliveryitems?.length ? (
             item.Deliveryitems.map((i, idx) => (
               <div
                 key={idx}
-                className="flex justify-between items-center bg-gray-50 rounded-lg px-3 py-2"
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  backgroundColor: '#f9fafb',
+                  borderRadius: '0.5rem',
+                  paddingLeft: '0.75rem',
+                  paddingRight: '0.75rem',
+                  paddingTop: '0.5rem',
+                  paddingBottom: '0.5rem',
+                }}
               >
-                <span className="text-gray-700">{i.itemName}</span>
-                <span className="font-semibold text-green-600">
+                <span style={{ color: '#374151' }}>{i.itemName}</span>
+                <span style={{ fontWeight: 600, color: '#16a34a' }}>
                   × {i.orderOty}
                 </span>
               </div>
             ))
           ) : (
-            <p className="text-sm text-gray-400 text-center">
+            <p style={{ fontSize: '0.875rem', color: '#9ca3af', textAlign: 'center' }}>
               No delivery items
             </p>
           ))}
@@ -88,25 +175,34 @@ function OrderItem({ item }) {
         {isDining &&
           (item?.DiningInitems?.length ? (
             <div>
-                <p className="text-sm pb-2 text-center">
-                    Ready At Restaurent
-                </p>
-                {item.DiningInitems.map((i, idx) => (
-              <div
-                key={idx}
-                className="flex justify-between items-center bg-gray-50 rounded-lg px-3 py-2"
-              >
-                <span className="text-gray-700">{i.itemName}</span>
-                <span className="font-semibold text-green-600">
-                  × {i.orderOty}
-                </span>
-              </div>
-            ))}
+              <p style={{ fontSize: '0.875rem', paddingBottom: '0.5rem', textAlign: 'center' }}>
+                Ready At Restaurant
+              </p>
+              {item.DiningInitems.map((i, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    backgroundColor: '#f9fafb',
+                    borderRadius: '0.5rem',
+                    paddingLeft: '0.75rem',
+                    paddingRight: '0.75rem',
+                    paddingTop: '0.5rem',
+                    paddingBottom: '0.5rem',
+                    marginBottom: '0.5rem'
+                  }}
+                >
+                  <span style={{ color: '#374151' }}>{i.itemName}</span>
+                  <span style={{ fontWeight: 600, color: '#16a34a' }}>
+                    × {i.orderOty}
+                  </span>
+                </div>
+              ))}
             </div>
-            
-            
           ) : (
-            <p className="text-sm text-gray-400 text-center">
+            <p style={{ fontSize: '0.875rem', color: '#9ca3af', textAlign: 'center' }}>
               No dining items
             </p>
           ))}
@@ -114,6 +210,3 @@ function OrderItem({ item }) {
     </div>
   );
 }
-
-
-

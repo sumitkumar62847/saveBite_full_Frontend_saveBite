@@ -1,30 +1,45 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { DeleteToCart } from '../Slices/cartSlice';
 
-function CartItemTime({iteminfo}) {
+function CartItemTime({ iteminfo }) {
+  const [dealSec, setDealSec] = useState(null);
+  const dispatch = useDispatch();
 
-    const [dealSec, setDealSec] = useState(null);
-    const dispatch = useDispatch();
+  useEffect(() => {
+    const liveTime = new Date(iteminfo.LiveUntil);
+    const abc = setInterval(() => {
+      const now = Date.now();
+      const diffMs = liveTime - now;
+      const sec = Math.floor(diffMs / 1000);
+      if (sec < 0) {
+        clearInterval(abc);
+        dispatch(DeleteToCart(iteminfo?._id));
+      } else {
+        setDealSec(sec);
+      }
+    }, 1000);
+    return () => clearInterval(abc);
+  }, [iteminfo?._id, dispatch, iteminfo.LiveUntil]);
 
-        useEffect(() => {
-            const liveTime = new Date(iteminfo.LiveUntil);
-            const abc = setInterval(() => {
-                const now = Date.now();
-                const diffMs = liveTime - now;
-                const sec = Math.floor(diffMs / 1000);
-                if (sec < 0){
-                    clearInterval(abc);
-                    dispatch(DeleteToCart(iteminfo?._id));
-                } else {
-                    setDealSec(sec);
-                }
-            }, 1000);
-            return () => clearInterval(abc);
-        }, [iteminfo?._id,dispatch,iteminfo.LiveUntil]);
   return (
-    <p className='text-center text-red-600 bg-red-100 '>{`${Math.floor(dealSec/3600)?`0${Math.floor(dealSec/3600)}h :`: ''} ${Math.floor((dealSec % 3600)/60)}min : ${Math.floor(dealSec % 60)}sec`}</p>
-  )
+    <p
+      style={{
+        textAlign: 'center',
+        color: '#dc2626', // text-red-600
+        backgroundColor: '#fee2e2', // bg-red-100
+        margin: 0, // Reset default p margin to match Tailwind behavior
+      }}
+    >
+      {`${
+        Math.floor(dealSec / 3600)
+          ? `0${Math.floor(dealSec / 3600)}h :`
+          : ''
+      } ${Math.floor((dealSec % 3600) / 60)}min : ${Math.floor(
+        dealSec % 60
+      )}sec`}
+    </p>
+  );
 }
 
-export default CartItemTime
+export default CartItemTime;

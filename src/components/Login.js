@@ -1,80 +1,209 @@
-import React,{useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import {createUser, otpVerification} from '../Slices/Register.js'
-
-
+import { createUser, otpVerification } from '../Slices/Register.js'
 
 const initialState = {
-    mobile_no:'',
+    mobile_no: '',
     motp: '',
 }
 
-function Login(){
-    const [isOpt , setIsOpt] = useState(false);
+function Login() {
+    const [isOpt, setIsOpt] = useState(false);
     const [user, setUser] = useState(initialState);
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
+    // Interaction states for inline styling
+    const [focusedField, setFocusedField] = useState(null);
+    const [isBtnActive, setIsBtnActive] = useState(false);
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
     const isRegistered = useSelector((state) => state.mainSB.isRegistered);
-   
-    function handleOpt(e){
+
+    useEffect(() => {
+        const handleResize = () => setWindowWidth(window.innerWidth);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    function handleOpt(e) {
         e.preventDefault();
-        if(!e.target.checkValidity()){
+        if (!e.target.checkValidity()) {
             alert('please fill in required fill');
             return;
-        }else if(user.mobile_no.length !== 10){
+        } else if (user.mobile_no.length !== 10) {
             alert('please fill correct mobile number');
-        }else{
+        } else {
             dispatch(createUser(user));
-            setIsOpt(true);  
+            setIsOpt(true);
         }
-        console.log(user);
     }
-    function handleVerification(e){
+
+    function handleVerification(e) {
         e.preventDefault();
-        console.log(user);
-        if(!e.target.checkValidity()){
+        if (!e.target.checkValidity()) {
             alert('please fill in required fill');
             return;
-        }else if(user.motp.length !== 6){
+        } else if (user.motp.length !== 6) {
             alert('please fill correct OTP');
             return;
-        }else{
+        } else {
             dispatch(otpVerification(user));
         }
     }
-    useEffect(()=>{
-        if(isRegistered){
+
+    useEffect(() => {
+        if (isRegistered) {
             navigate('/');
         }
-    },[isRegistered, navigate]);
+    }, [isRegistered, navigate]);
 
-    function changehandle(e){
-        setUser({...user,[e.target.name]:e.target.value});
+    function changehandle(e) {
+        setUser({ ...user, [e.target.name]: e.target.value });
     }
-  return (
-    <div className='w-full h-[100vh] bg-white flex justify-center items-center '>
-        <div className='w-[80%] h-[80%] md:w-[50%] lg:w-[40%] bg-green-50  rounded-xl flex flex-col items-center justify-around'>
-            <div className='w-full h-auto p-4 flex flex-col justify-center items-center'>
-                <h1 className='text-3xl text-green-500 py-4'>Register your New Account</h1>
-                <p className='text-slate-400'>something abount web site</p> 
-            </div>
-            <div className='w-full h-auto flex justify-center items-center gap-4'>
-                {!isOpt && <form className='w-full h-auto flex flex-col items-center gap-10 ' onSubmit={handleOpt}>
-                    <input type='number' required name='mobile_no' placeholder='Mobile Number' pattern='\d*' onChange={(e)=>changehandle(e)}
-                    className='placeholder:text-lg w-[70%] h-[50px] text-2xl border-b-2 focus:border-green-500 focus:outline-none  px-4'/>
-                    <button type='submit' className='w-[200px] h-[50px] bg-green-500 text-white rounded-xl font-semibold'>Send OTP </button>
-                </form>}
-                {isOpt && <form className='w-full h-auto flex flex-col items-center gap-10 ' onSubmit={handleVerification}>
-                    <input type='number' required name='motp' placeholder='OTP' pattern='\d*' onChange={(e)=>changehandle(e)} 
-                    className='placeholder:text-lg w-[70%] h-[50px] text-2xl border-b-2 focus:border-green-500 focus:outline-none  px-4'/>
-                    <button type='submit' className='w-[200px] h-[50px] bg-green-500 active:bg-green-600 text-white rounded-xl font-semibold'>Verify & Next</button>
-                </form>}
+
+    // Responsive width calculation
+    const getContainerWidth = () => {
+        if (windowWidth >= 1024) return '40%'; // lg
+        if (windowWidth >= 768) return '50%';  // md
+        return '80%';                          // default/mobile
+    };
+
+    const inputStyle = (name) => ({
+        width: '70%',
+        height: '50px',
+        fontSize: '1.5rem', // text-2xl
+        border: 'none',
+        borderBottom: `2px solid ${focusedField === name ? '#22c55e' : '#e5e7eb'}`, // focus:border-green-500
+        outline: 'none',
+        paddingLeft: '1rem',
+        paddingRight: '1rem',
+        backgroundColor: 'transparent',
+        transition: 'border-color 0.2s',
+    });
+
+    return (
+        <div style={{
+            width: '100%',
+            height: '100vh',
+            backgroundColor: 'white',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+        }}>
+            <div style={{
+                width: getContainerWidth(),
+                height: '80%',
+                backgroundColor: '#f0fdf4', // bg-green-50
+                borderRadius: '0.75rem',     // rounded-xl
+                display: 'flex',
+                flexDirection: 'column',
+                itemsCenter: 'center',
+                justifyContent: 'space-around',
+                padding: '1rem'
+            }}>
+                <div style={{
+                    width: '100%',
+                    height: 'auto',
+                    padding: '1rem',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}>
+                    <h1 style={{
+                        fontSize: '1.875rem', // text-3xl
+                        color: '#22c55e',      // text-green-500
+                        paddingTop: '1rem',
+                        paddingBottom: '1rem',
+                        textAlign: 'center'
+                    }}>
+                        Register your New Account
+                    </h1>
+                    <p style={{ color: '#94a3b8', textAlign: 'center' }}>something about website</p>
+                </div>
+
+                <div style={{
+                    width: '100%',
+                    height: 'auto',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: '1rem'
+                }}>
+                    {!isOpt ? (
+                        <form
+                            style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2.5rem' }}
+                            onSubmit={handleOpt}
+                        >
+                            <input
+                                type='number'
+                                required
+                                name='mobile_no'
+                                placeholder='Mobile Number'
+                                pattern='\d*'
+                                onChange={changehandle}
+                                onFocus={() => setFocusedField('mobile_no')}
+                                onBlur={() => setFocusedField(null)}
+                                style={inputStyle('mobile_no')}
+                            />
+                            <button
+                                type='submit'
+                                style={{
+                                    width: '200px',
+                                    height: '50px',
+                                    backgroundColor: '#22c55e',
+                                    color: 'white',
+                                    borderRadius: '0.75rem',
+                                    fontWeight: 600,
+                                    border: 'none',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                Send OTP
+                            </button>
+                        </form>
+                    ) : (
+                        <form
+                            style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2.5rem' }}
+                            onSubmit={handleVerification}
+                        >
+                            <input
+                                type='number'
+                                required
+                                name='motp'
+                                placeholder='OTP'
+                                pattern='\d*'
+                                onChange={changehandle}
+                                onFocus={() => setFocusedField('motp')}
+                                onBlur={() => setFocusedField(null)}
+                                style={inputStyle('motp')}
+                            />
+                            <button
+                                type='submit'
+                                onMouseDown={() => setIsBtnActive(true)}
+                                onMouseUp={() => setIsBtnActive(false)}
+                                style={{
+                                    width: '200px',
+                                    height: '50px',
+                                    backgroundColor: isBtnActive ? '#16a34a' : '#22c55e', // active:bg-green-600
+                                    color: 'white',
+                                    borderRadius: '0.75rem',
+                                    fontWeight: 600,
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    transition: 'background-color 0.1s'
+                                }}
+                            >
+                                Verify & Next
+                            </button>
+                        </form>
+                    )}
+                </div>
             </div>
         </div>
-    </div>
-  )
+    )
 }
 
 export default Login;

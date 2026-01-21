@@ -5,111 +5,195 @@ import MapComponent from './MapComponent';
 import { deleteUserAdd, getAddressData, setCurrentAdd, setCurrentAddAtF } from '../Slices/Addressinfo';
 import { useNavigate } from 'react-router-dom';
 
-
 function AddressField() {
     const isRegistered = useSelector((state) => state.mainSB.isRegistered);
-    const addinfo = useSelector((state)=> state.restAdd.restAdd);
+    const addinfo = useSelector((state) => state.restAdd.restAdd);
     const [isadd, setIsadd] = useState(false);
+    const [hoveredIndex, setHoveredIndex] = useState(null);
+    const [isHoveringAddBtn, setIsHoveringAddBtn] = useState(false);
+    const [isHoveringContinue, setIsHoveringContinue] = useState(false);
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    useEffect(()=>{
-      dispatch(getAddressData())
-      if(addinfo?.AddData?.length > 0){ 
-        setIsadd(true)
-      }else{
-        setIsadd(false)
-      }
-    },[dispatch,addinfo?.AddData?.length,setIsadd])
 
-    function clickHandle(e,id,userid, ele){
-      e.preventDefault();
-      console.log(ele,"/n", ele?.isUseNow);
-      dispatch(setCurrentAddAtF(id));
-      dispatch(setCurrentAdd({id,userid}));
-      // dispatch(getAddressData());
+    useEffect(() => {
+        dispatch(getAddressData())
+        if (addinfo?.AddData?.length > 0) {
+            setIsadd(true)
+        } else {
+            setIsadd(false)
+        }
+    }, [dispatch, addinfo?.AddData?.length])
+
+    function clickHandle(e, id, userid, ele) {
+        e.preventDefault();
+        dispatch(setCurrentAddAtF(id));
+        dispatch(setCurrentAdd({ id, userid }));
     }
-    
-    function removeHandle(e,id){
-      e.preventDefault();
-      e.stopPropagation();
-      dispatch(deleteUserAdd(id))
+
+    function removeHandle(e, id) {
+        e.preventDefault();
+        e.stopPropagation();
+        dispatch(deleteUserAdd(id))
     }
-    
-  return (
-    <div className="w-full h-[100vh]  bg-[#ffffff] simindexMap">
-        <Header islogin={!isRegistered}></Header>
-        {isadd &&<div className='w-full h-[87vh] bg-white flex flex-col gap-4 items-center justify-center'>
-            <div className="w-[50%] min-h-[60vh] bg-white rounded-xl shadow-lg">
 
-              <div className="w-full h-[64px] border-b flex items-center justify-center relative">
-                <h1 className="text-xl font-semibold text-gray-700">
-                  Save Address
-                </h1>
-                <button
-                  className="absolute right-4 text-gray-500 hover:text-red-500 text-lg"
-                  onClick={() => navigate(-1)}
-                >
-                  ✕
-                </button>
-              </div>
+    return (
+        <div style={{ width: '100%', height: '100vh', backgroundColor: '#ffffff' }} className="simindexMap">
+            <Header islogin={!isRegistered}></Header>
+            
+            {isadd && (
+                <div style={{ 
+                    width: '100%', 
+                    height: '87vh', 
+                    backgroundColor: 'white', 
+                    display: 'flex', 
+                    flexDirection: 'column', 
+                    gap: '16px', 
+                    alignItems: 'center', 
+                    justifyContent: 'center' 
+                }}>
+                    <div style={{ 
+                        width: '50%', 
+                        minHeight: '60vh', 
+                        backgroundColor: 'white', 
+                        borderRadius: '0.75rem', 
+                        boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)' 
+                    }}>
+                        {/* Header Section */}
+                        <div style={{ 
+                            width: '100%', 
+                            height: '64px', 
+                            borderBottom: '1px solid #e5e7eb', 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            justifyContent: 'center', 
+                            position: 'relative' 
+                        }}>
+                            <h1 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#374151' }}>
+                                Save Address
+                            </h1>
+                            <button
+                                style={{ 
+                                    position: 'absolute', 
+                                    right: '16px', 
+                                    color: '#6b7280', 
+                                    fontSize: '1.125rem', 
+                                    background: 'none', 
+                                    border: 'none', 
+                                    cursor: 'pointer' 
+                                }}
+                                onMouseEnter={(e) => e.target.style.color = '#ef4444'}
+                                onMouseLeave={(e) => e.target.style.color = '#6b7280'}
+                                onClick={() => navigate(-1)}
+                            >
+                                ✕
+                            </button>
+                        </div>
 
+                        {/* Address List */}
+                        <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                            {addinfo?.AddData?.map((ele, index) => (
+                                <div
+                                    key={index}
+                                    onClick={(e) => clickHandle(e, ele._id, ele.userid, ele)}
+                                    onMouseEnter={() => setHoveredIndex(index)}
+                                    onMouseLeave={() => setHoveredIndex(null)}
+                                    style={{
+                                        position: 'relative',
+                                        display: 'flex',
+                                        alignItems: 'flex-start',
+                                        gap: '12px',
+                                        padding: '16px',
+                                        borderRadius: '0.5rem',
+                                        border: ele?.isUseNow ? '1px solid #22c55e' : '1px solid #e5e7eb',
+                                        backgroundColor: ele?.isUseNow ? '#f0fdf4' : (hoveredIndex === index ? '#f9fafb' : 'transparent'),
+                                        cursor: 'pointer',
+                                        transition: 'all 0.2s'
+                                    }}
+                                >
+                                    <input
+                                        type="radio"
+                                        checked={ele?.isUseNow}
+                                        readOnly
+                                        style={{ marginTop: '4px', accentColor: '#22c55e' }}
+                                    />
 
-              <div className="p-4 space-y-3">
-                {addinfo?.AddData?.map((ele, index) => (
-                  <div
-                    key={index}
-                    onClick={(e) => clickHandle(e, ele._id, ele.userid, ele)}
-                    className={`relative flex items-start gap-3 p-4 rounded-lg border cursor-pointer transition
-                      ${
-                        ele?.isUseNow
-                          ? "border-green-500 bg-green-50"
-                          : "border-gray-200 hover:bg-gray-50"
-                      }
-                    `}
-                  >
+                                    <div style={{ fontSize: '0.875rem', color: '#4b5563', lineHeight: '1.25rem' }}>
+                                        <p style={{ fontWeight: 500, margin: 0, color: '#374151' }}>{ele?.Locality}</p>
+                                        <p style={{ color: '#6b7280', margin: 0 }}>{ele?.Landmark}</p>
+                                        <p style={{ color: '#6b7280', margin: 0 }}>{ele?.Map_Address}</p>
+                                    </div>
 
-                    <input
-                      type="radio"
-                      checked={ele?.isUseNow}
-                      readOnly
-                      className="mt-1 accent-green-500"
-                    />
+                                    <button
+                                        onClick={(e) => removeHandle(e, ele?._id)}
+                                        style={{
+                                            position: 'absolute',
+                                            top: '12px',
+                                            right: '12px',
+                                            fontSize: '0.75rem',
+                                            color: '#ef4444',
+                                            background: 'none',
+                                            border: 'none',
+                                            cursor: 'pointer'
+                                        }}
+                                        onMouseEnter={(e) => e.target.style.color = '#b91c1c'}
+                                        onMouseLeave={(e) => e.target.style.color = '#ef4444'}
+                                    >
+                                        Remove
+                                    </button>
+                                </div>
+                            ))}
 
-
-                    <div className="text-sm text-gray-700 leading-5">
-                      <p className="font-medium">{ele?.Locality}</p>
-                      <p className="text-gray-500">{ele?.Landmark}</p>
-                      <p className="text-gray-500">{ele?.Map_Address}</p>
+                            <div style={{ paddingTop: '16px', display: 'flex', justifyContent: 'center' }}>
+                                <button
+                                    style={{
+                                        padding: '8px 24px',
+                                        fontSize: '0.875rem',
+                                        backgroundColor: isHoveringAddBtn ? '#16a34a' : '#22c55e',
+                                        color: 'white',
+                                        borderRadius: '0.5rem',
+                                        border: 'none',
+                                        cursor: 'pointer',
+                                        transition: 'background-color 0.2s'
+                                    }}
+                                    onMouseEnter={() => setIsHoveringAddBtn(true)}
+                                    onMouseLeave={() => setIsHoveringAddBtn(false)}
+                                    onClick={() => setIsadd(false)}
+                                >
+                                    + Add New Address
+                                </button>
+                            </div>
+                        </div>
                     </div>
-
-
-                    <button
-                      onClick={(e) => removeHandle(e, ele?._id)}
-                      className="absolute top-3 right-3 text-xs text-red-500 hover:text-red-700"
+                    
+                    <button 
+                        style={{
+                            padding: '8px',
+                            backgroundColor: isHoveringContinue ? '#16a34a' : '#22c55e',
+                            color: 'white',
+                            borderRadius: '0.5rem',
+                            width: '300px',
+                            border: 'none',
+                            cursor: 'pointer',
+                            fontWeight: '600',
+                            transition: 'background-color 0.2s'
+                        }} 
+                        onMouseEnter={() => setIsHoveringContinue(true)}
+                        onMouseLeave={() => setIsHoveringContinue(false)}
+                        onClick={() => navigate('/payment')}
                     >
-                      Remove
+                        Continue
                     </button>
-                  </div>
-                ))}
-
-
-                <div className="pt-4 flex justify-center">
-                  <button
-                    className="px-6 py-2 text-sm bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
-                    onClick={() => setIsadd(false)}
-                  >
-                    + Add New Address
-                  </button>
                 </div>
-              </div>
-            </div>
-            <button className='p-2 bg-green-500 rounded-lg w-[300px]' onClick={()=> navigate('/payment')}>Continue</button>
-        </div>}
-        {!isadd && <div className='w-full h-auto my-4 flex flex-col justify-center items-center'>
-          <MapComponent responsiveness={true}></MapComponent>
-        </div>}
-    </div>
-  )
+            )}
+
+            {!isadd && (
+                <div style={{ width: '100%', height: 'auto', margin: '16px 0', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                    <MapComponent responsiveness={true}></MapComponent>
+                </div>
+            )}
+        </div>
+    )
 }
 
 export default AddressField;
