@@ -29,6 +29,7 @@ function Header({ search }) {
   const jwttoken = localStorage.getItem("jwt_token");
   const coods = localStorage.getItem("coods");
   const Api = process.env.REACT_APP_API_URL;
+  // const Api = 'http://localhost:8088';
 
   useEffect(() => {
     if (jwttoken && !isRegistered) dispatch(mainLogin(jwttoken));
@@ -105,27 +106,10 @@ function Header({ search }) {
   };
 
   return (
-    <header style={{ width: "100%", height: "90px" }}>
-      <nav
-        style={{
-          position: "fixed",
-          top: 0,
-          zIndex: 50,
-          width: "100%",
-          height: "90px",
-          backgroundColor: "rgba(255, 255, 255, 0.8)",
-          backdropFilter: "blur(24px)",
-          boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
-          borderBottom: "1px solid #bbf7d0",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          paddingLeft: "3%",
-          paddingRight: "3%",
-        }}
-      >
+    <header className={`${search ? "header" : "header1"}`}>
+      <nav className="navbar">
         <div
-          style={{ display: "flex", alignItems: "center", gap: "12px", cursor: "pointer" }}
+          className="logo-box"
           onClick={() => navigate("/")}
           onMouseEnter={() => setHoverScale("logo")}
           onMouseLeave={() => setHoverScale(null)}
@@ -133,50 +117,40 @@ function Header({ search }) {
           <img
             src={logo}
             alt="logo"
+            className="logo-img"
             style={{
-              width: "60px",
-              transition: "transform 0.2s",
-              transform: hoverScale === "logo" ? "scale(1.05)" : "scale(1)",
+              transform:
+                hoverScale === "logo" ? "scale(1.05)" : "scale(1)",
             }}
           />
           <div>
-            <p style={{ fontSize: "1.875rem", lineHeight: "2.25rem", fontWeight: 800, color: "#22c55e", margin: 0 }}>
-              SAVE<span style={{ color: "#fb923c" }}>BITE</span>
+            <p className="logo-text">
+              SAVE<span>BITE</span>
             </p>
-            <p style={{ fontSize: "0.75rem", color: "#6b7280", margin: 0 }}>Smart AI Food Search</p>
+            <p className="logo-subtext">Smart AI Food Search</p>
           </div>
         </div>
-
         {search && (
-          <div style={{ position: "relative", width: "45%" }}>
+          <div className="search-wrapper mobile-search">
             <form onSubmit={searchHandler}>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  backgroundColor: "white",
-                  borderRadius: "1rem",
-                  border: "1px solid #e5e7eb",
-                  boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
-                }}
-              >
-                <img src={Aicon} alt="ai" style={{ width: "40px", height: "40px", marginLeft: "8px", borderRadius: "9999px" }} />
+              <div className="search-box">
+                <img src={Aicon} alt="ai" className="ai-icon" />
                 <input
                   value={query}
                   onChange={changeHandler}
                   placeholder="Ask AI: high protein, fever dinner..."
-                  style={{
-                    width: "100%",
-                    padding: "12px 16px",
-                    fontSize: "1.125rem",
-                    outline: "none",
-                    backgroundColor: "transparent",
-                    border: "none",
-                  }}
+                  className="search-input"
                 />
                 <button
                   type="submit"
-                  style={{ ...btnStyle, margin: "0 8px", transform: hoverScale === "search" ? "scale(1.05)" : "scale(1)" }}
+                  className="search-btn"
+                  style={{
+                    ...btnStyle,
+                    transform:
+                      hoverScale === "search"
+                        ? "scale(1.05)"
+                        : "scale(1)",
+                  }}
                   onMouseEnter={() => setHoverScale("search")}
                   onMouseLeave={() => setHoverScale(null)}
                 >
@@ -186,32 +160,14 @@ function Header({ search }) {
             </form>
 
             {suggestions.size > 0 && (
-              <div
-                style={{
-                  position: "absolute",
-                  marginTop: "12px",
-                  width: "100%",
-                  backgroundColor: "white",
-                  borderRadius: "0.75rem",
-                  boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1)",
-                  overflow: "hidden",
-                }}
-              >
+              <div className="suggestions">
                 {Array.from(suggestions).map((i, idx) => (
                   <div
                     key={idx}
                     onClick={() => suggestionHandler(i)}
-                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f0fdf4")}
-                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
-                    style={{
-                      padding: "16px 20px",
-                      cursor: "pointer",
-                      display: "flex",
-                      gap: "12px",
-                      transition: "background-color 0.2s",
-                    }}
+                    className="suggestion-item"
                   >
-                    🤖 <span>{i}</span>
+                    <span>{i}</span>
                   </div>
                 ))}
               </div>
@@ -219,11 +175,18 @@ function Header({ search }) {
           </div>
         )}
 
-        <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+        {/* Right Section */}
+        <div className="nav-actions">
           {!isRegistered && (
             <button
+              className="nav-btn"
               onClick={() => navigate("/login")}
-              style={{ ...btnStyle, transform: hoverScale === "login" ? "scale(1.05)" : "scale(1)" }}
+              style={{
+                transform:
+                  hoverScale === "login"
+                    ? "scale(1.05)"
+                    : "scale(1)",
+              }}
               onMouseEnter={() => setHoverScale("login")}
               onMouseLeave={() => setHoverScale(null)}
             >
@@ -233,42 +196,30 @@ function Header({ search }) {
 
           {isRegistered && (
             <div
+              className="profile-box"
               onClick={() => navigate("/profile")}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f0fdf4")}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                padding: "8px 12px",
-                borderRadius: "0.75rem",
-                cursor: "pointer",
-                transition: "background-color 0.2s",
-              }}
             >
-              <img alt="icon" src={proficon} style={{ width: "24px" }} />
-              <span style={{ fontWeight: 500 }}>{userInfo?.userInfo?.name || "Guest"}</span>
+              <img src={proficon} alt="icon" />
+              <span>
+                {userInfo?.userInfo?.name || "Guest"}
+              </span>
             </div>
           )}
 
           {isRegistered && (
             <div
+              className="icon-btn"
               onClick={() => navigate("/cart")}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f0fdf4")}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
-              style={{ padding: "8px", borderRadius: "9999px", cursor: "pointer", transition: "background-color 0.2s" }}
             >
-              <img alt="icon" src={bagicon} style={{ width: "28px" }} />
+              <img src={bagicon} alt="icon" />
             </div>
           )}
 
           <div
+            className="icon-btn"
             onClick={() => navigate("/help")}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f0fdf4")}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
-            style={{ padding: "8px", borderRadius: "9999px", cursor: "pointer", transition: "background-color 0.2s" }}
           >
-            <img alt="icon" src={helpicon} style={{ width: "28px" }} />
+            <img src={helpicon} alt="icon" />
           </div>
         </div>
       </nav>

@@ -25,16 +25,7 @@ function AddressInfo() {
   }
 
   return (
-    <div
-      style={{
-        width: "50%",
-        backgroundColor: "#ffffff",
-        margin: "1rem",
-        borderRadius: "0.75rem",
-        boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
-        border: "1px solid #e5e7eb",
-      }}
-    >
+    <div className='address-wrapper'>
       {/* Empty State */}
       {!isadd && (
         <div

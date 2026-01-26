@@ -21,8 +21,8 @@ function PopFly() {
           style={{
             width: '100%',
             height: 'auto',
-            marginTop: '1rem',    // my-4 (top)
-            marginBottom: '1rem', // my-4 (bottom)
+            marginTop: '1rem',   
+            marginBottom: '1rem', 
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',

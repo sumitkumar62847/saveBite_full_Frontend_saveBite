@@ -30,7 +30,7 @@ function Home() {
   }
 
   return (
-    <div style={{ overflow: 'hidden', width: '100%' }}>
+    <div style={{ width: '100%' }}>
       <Header search={true}></Header>
 
       
@@ -74,7 +74,6 @@ function Home() {
         </div>
       </div>
 
-      {/* Floating Order Cart Bubble */}
       {Onumber !== 0 && (
         <div
           className="simindexnav"
@@ -140,7 +139,6 @@ function Home() {
         </div>
       )}
 
-      {/* Main Content Sections */}
       <Items></Items>
       <Footer></Footer>
     </div>

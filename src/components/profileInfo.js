@@ -16,7 +16,6 @@ function ProfileInfo() {
 
   const [disable, setDisable] = useState(true);
   
-  // Track focus and hover for inline style simulation
   const [focusedField, setFocusedField] = useState(null);
   const [isHovered, setIsHovered] = useState(null);
 
@@ -66,16 +65,7 @@ function ProfileInfo() {
   });
 
   return (
-    <div
-      style={{
-        width: '50%',
-        backgroundColor: 'white',
-        margin: '1rem',
-        borderRadius: '0.75rem',
-        boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
-        border: '1px solid #e5e7eb',
-      }}
-    >
+    <div className='profile-wrapper' >
       <div style={{ width: '80%', height: 'auto', marginTop: '2.5rem', marginLeft: 'auto', marginRight: 'auto', marginBottom: '1rem' }}>
         <form name="personalInfo" style={{ width: '100%', marginTop: '1.25rem', marginBottom: '1.25rem' }}>
           <label style={{ color: '#020617', fontSize: '1.5rem', lineHeight: '2rem' }}>Personal Information</label>

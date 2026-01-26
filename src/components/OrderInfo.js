@@ -17,84 +17,36 @@ function OrderInfo() {
   }, [dispatch]);
 
   return (
-    <div
-      style={{
-        width: '850px',
-        height: 'auto',
-        backgroundColor: 'white',
-        margin: '1rem',
-        border: '1px solid #e5e7eb', // border (default gray-200)
-      }}
-    >
-      {yes && (
-        <div>
-          <div
-            style={{
-              width: '100%',
-              height: '80%',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <h1
-              style={{
-                textAlign: 'center',
-                fontSize: '1.5rem', // text-2xl
-                lineHeight: '2rem',
-              }}
-            >
-              Not any Order Place at yet
-            </h1>
-          </div>
-          <div
-            style={{
-              width: '100%',
-              height: '20%',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <button
-              onClick={() => navigate('/')}
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
-              style={{
-                width: '200px',
-                height: '40px',
-                textAlign: 'center',
-                color: 'white',
-                paddingTop: '0.5rem',
-                paddingBottom: '0.5rem',
-                backgroundColor: isHovered ? '#166534' : '#16a34a', // hover:bg-green-800 vs bg-green-600
-                borderRadius: '0.75rem', // rounded-xl
-                border: 'none',
-                cursor: 'pointer',
-                transition: 'background-color 0.2s',
-              }}
-            >
-              Order Now
-            </button>
-          </div>
-        </div>
-      )}
+    <div className="orders-wrapper">
+  {yes && (
+    <div className="orders-empty">
+      <div className="orders-empty-text">
+        <h1>Not any Order Place at yet</h1>
+      </div>
 
-      {!yes && (
-        <div
+      <div className="orders-empty-action">
+        <button
+          onClick={() => navigate('/')}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          className="orders-btn"
           style={{
-            width: '100%',
-            height: '80%',
-            overflowY: 'auto',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
+            backgroundColor: isHovered ? '#166534' : '#16a34a'
           }}
         >
-          <OrderCart allOrder={true} AllOrderItems={OrderItems} />
-        </div>
-      )}
+          Order Now
+        </button>
+      </div>
     </div>
+  )}
+
+  {!yes && (
+    <div className="orders-list">
+      <OrderCart allOrder={true} AllOrderItems={OrderItems} />
+    </div>
+  )}
+</div>
+
   );
 }
 

@@ -170,15 +170,7 @@ const MapComponent = ({ responsiveness }) => {
       )}
 
       <div style={{ width: '100%', display: 'flex', justifyContent: 'center', gap: '16px' }}>
-        <div style={{
-          position: 'relative',
-          width: !responsiveness ? '50%' : '40%',
-          backgroundColor: 'white',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-          border: '1px solid #9ca3af',
-          borderRadius: '1rem',
-          overflow: 'hidden'
-        }}>
+        <div className={`map-card ${responsiveness ? 'map-card--responsive' : ''}`}>
           {!responsiveness && (
             <h1 style={{ height: '10%', textAlign: 'center', padding: '8px', fontSize: '30px', borderBottom: '2px solid #e5e7eb', margin: 0 }}>
               Address Information
